@@ -2,18 +2,27 @@ import React, { Component } from 'react';
 import { Navbar, NavbarBrand } from 'reactstrap';
 import './App.css';
 import Directory from './components/DirectoryComponent';
+import { CAMPSITES } from './shared/campsites';
 
-function App() {
-  return (
-    <div className="App">
-      <Navbar dark color="primary">
-        <NavbarBrand href="/">nucamp</NavbarBrand>
-      </Navbar>
-      <div className="container">
-        <Directory />
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      campsites: CAMPSITES,
+    };
+  }
+  render() {
+    return (
+      <div className="App">
+        <Navbar dark color="primary" style={{ marginBottom: '1rem' }}>
+          <div className="container">
+            <NavbarBrand href="/">nucamp</NavbarBrand>
+          </div>
+        </Navbar>
+        <Directory campsites={this.state.campsites} />
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default App;
