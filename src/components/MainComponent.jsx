@@ -17,6 +17,8 @@ class Main extends Component {
     this.setState({ selectedCampsite: campsiteId });
   }
 
+  handleClick = (campsiteId) => this.onCampsiteSelect(campsiteId);
+
   render() {
     return (
       <div>
@@ -27,7 +29,7 @@ class Main extends Component {
         </Navbar>
         <Directory
           campsites={this.state.campsites}
-          handleClick={(campsiteId) => this.onCampsiteSelect(campsiteId)}
+          handleClick={this.handleClick}
         />
         <CampsiteInfo
           campsite={
