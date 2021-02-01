@@ -18,7 +18,7 @@ class CampsiteInfo extends Component {
       return (
         <div className="col-md-5 m-1">
           <h4>Comments</h4>
-          {this.props.selectedCampsite.comments.map((comment) => (
+          {this.props.campsite.comments.map((comment) => (
             <p>
               {comment.text}
               <br />
@@ -48,13 +48,11 @@ class CampsiteInfo extends Component {
   );
 
   render() {
-    return this.props.selectedCampsite ? (
-      <div className="row">
-        <div className="col-md-5 m-1">
-          {this.renderCampsite(this.props.selectedCampsite)}
-        </div>
-        <div className="col-md-5 m-1">
-          {this.renderComments(this.props.selectedCampsite.comments)}
+    return this.props.campsite ? (
+      <div className="container">
+        <div className="row">
+          {this.renderCampsite(this.props.campsite)}
+          {this.renderComments(this.props.campsite.comments)}
         </div>
       </div>
     ) : (
