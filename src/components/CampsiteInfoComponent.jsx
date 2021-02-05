@@ -41,12 +41,12 @@ const RenderCampsite = (campsite) => (
   </div>
 );
 
-const CampsiteInfo = ({ campsite }) => {
+const CampsiteInfo = ({ campsite, comments }) => {
   return campsite ? (
     <div className="container">
       <div className="row">
         {RenderCampsite(campsite)}
-        {RenderComments(campsite.comments)}
+        {RenderComments(comments)}
       </div>
     </div>
   ) : (
