@@ -1,7 +1,7 @@
 import { Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
 
-const RenderDirectoryItem = ({ campsite, handleClick }) => (
-  <Card onClick={() => handleClick(campsite.id)}>
+const RenderDirectoryItem = ({ campsite }) => (
+  <Card>
     <CardImg width="100%" src={campsite.image} alt={campsite.name} />
     <CardImgOverlay>
       <CardTitle>{campsite.name}</CardTitle>
@@ -9,10 +9,10 @@ const RenderDirectoryItem = ({ campsite, handleClick }) => (
   </Card>
 );
 
-const Directory = ({ campsites, handleClick }) => {
+const Directory = ({ campsites }) => {
   const directory = campsites.map((campsite) => (
     <div className="col-md-5 m-1" key={campsite.id}>
-      <RenderDirectoryItem campsite={campsite} handleClick={handleClick} />
+      <RenderDirectoryItem campsite={campsite} />
     </div>
   ));
   return (
