@@ -10,6 +10,7 @@ import { CAMPSITES } from '../shared/campsites';
 import { COMMENTS } from '../shared/comments';
 import { PARTNERS } from '../shared/partners';
 import { PROMOTIONS } from '../shared/promotions';
+import CampsiteInfo from './CampsiteInfoComponent';
 
 class Main extends Component {
   constructor(props) {
@@ -37,6 +38,23 @@ class Main extends Component {
       );
     };
 
+    const RenderCampsiteWithId = ({ match }) => {
+      return (
+        <CampsiteInfo
+          campsite={
+            this.state.campsites.filter(
+              (campsite) => campsite.id === +match.params.campsiteId
+            )[0]
+          }
+          comments={this.state.comments.filter(
+            (comment) => comment.campsiteId === +match.params.campsiteId
+          )}
+        />
+      );
+    };
+    //Don't forget the '[0]' after I run filter. Filter always returns an array. If I forget this, I am passing the whole array and when child component needs a property of an element(which is the campsite object), it will be undefined.
+    //Make sure to put the '+' in front of match. id from params is always a string(Think of a query string in url)
+
     return (
       <div>
         <Header />
@@ -52,6 +70,11 @@ class Main extends Component {
                 comments={this.state.comments}
               />
             )}
+          />
+          <Route
+            exact
+            path="/directory/:campsiteId"
+            component={RenderCampsiteWithId}
           />
           <Route exact path="/contactus" component={Contact} />
           <Redirect to="/home" />
