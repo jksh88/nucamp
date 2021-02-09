@@ -23,7 +23,7 @@ class Main extends Component {
   }
 
   render() {
-    const Home = () => {
+    const HomePage = () => {
       return (
         <Home
           campsite={
@@ -41,11 +41,17 @@ class Main extends Component {
       <div>
         <Header />
         <Switch>
-          <Route exact path="/home" component={Home} />
+          <Route exact path="/home" component={HomePage} />
           <Route
             exact
             path="/directory"
-            render={() => <Directory campsites={this.state.campsites} />}
+            render={(props) => (
+              <Directory
+                {...props}
+                campsites={this.state.campsites}
+                comments={this.state.comments}
+              />
+            )}
           />
           <Route exact path="/contactus" component={Contact} />
           <Redirect to="/home" />

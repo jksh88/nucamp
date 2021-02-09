@@ -54,4 +54,4 @@ const CampsiteInfo = ({ campsite, comments }) => {
   );
 };
 
-// export default CampsiteInfo;
+export default CampsiteInfo;

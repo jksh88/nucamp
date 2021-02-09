@@ -1,4 +1,5 @@
 import { Card, CardImg, CardImgOverlay, CardTitle } from 'reactstrap';
+import CampsiteInfo from './CampsiteInfoComponent';
 
 const RenderDirectoryItem = ({ campsite }) => (
   <Card>
@@ -9,10 +10,11 @@ const RenderDirectoryItem = ({ campsite }) => (
   </Card>
 );
 
-const Directory = ({ campsites }) => {
+const Directory = ({ campsites, comments }) => {
   const directory = campsites.map((campsite) => (
     <div className="col-md-5 m-1" key={campsite.id}>
       <RenderDirectoryItem campsite={campsite} />
+      <CampsiteInfo comments={comments} />
     </div>
   ));
   return (
