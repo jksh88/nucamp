@@ -5,7 +5,11 @@ import {
   CardText,
   CardBody,
   CardTitle,
+  Breadcrumb,
+  BreadcrumbItem,
 } from 'reactstrap';
+
+import { Link } from 'react-router-dom';
 
 const RenderComments = (comments) => {
   if (comments) {
@@ -34,7 +38,6 @@ const RenderCampsite = (campsite) => (
     <Card>
       <CardImg top src={campsite.image} alt={campsite.name} />
       <CardBody>
-        <CardTitle>{campsite.name}</CardTitle>
         <CardText>{campsite.description}</CardText>
       </CardBody>
     </Card>
@@ -45,8 +48,20 @@ const CampsiteInfo = ({ campsite, comments }) => {
   return campsite ? (
     <div className="container">
       <div className="row">
-        {RenderCampsite(campsite)}
-        {RenderComments(comments)}
+        <div className="col">
+          <Breadcrumb>
+            <BreadcrumbItem>
+              <Link to="/directory">Directory</Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem active>{campsite.name}</BreadcrumbItem>
+          </Breadcrumb>
+          <h2>{campsite.name}</h2>
+          <hr />
+        </div>
+        <div className="row">
+          {RenderCampsite(campsite)}
+          {RenderComments(comments)}
+        </div>
       </div>
     </div>
   ) : (
