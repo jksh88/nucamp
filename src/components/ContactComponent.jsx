@@ -8,6 +8,7 @@ import {
   Label,
   Input,
   Col,
+  FormFeedback,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -19,6 +20,12 @@ const initialState = {
   agree: false,
   contactType: 'By phone',
   feedback: '',
+  touched: {
+    firstName: false,
+    lastName: false,
+    phoneNumber: false,
+    email: false,
+  },
 };
 
 const Contact = (props) => {
@@ -37,6 +44,46 @@ const Contact = (props) => {
     setState(initialState);
   };
 
+  const validate = (firstName, lastName, phoneNumber, email) => {
+    const errors = {};
+    if (state.touched.firstName) {
+      if (firstName.length < 2) {
+        errors.firstName = 'First name cannot be less than two characters';
+      } else if (firstName.length > 20) {
+        errors.firstName = 'First name cannot be longer than twenty characters';
+      }
+    }
+    if (state.touched.lastName) {
+      if (lastName.length < 2) {
+        errors.lastName = 'Last name cannot be less than two characters';
+      } else if (firstName.length > 20) {
+        errors.lastName = 'Last name cannot be longer than twenty characters';
+      }
+    }
+    if (state.touched.phoneNumber) {
+      const phoneReg = /^\d{10}$/;
+      if (!phoneReg.test(phoneNumber)) {
+        errors.phoneNumber = 'Enter ten digit phone number including area code';
+      }
+    }
+    if (state.touched.email) {
+      const emailReg = /^\w+@\w+\.\w{2,}$/;
+      if (!emailReg.test(email)) {
+        errors.email = 'Enter a valid email';
+      }
+    }
+    return errors;
+  };
+
+  const handleBlur = (evt) =>
+    setState((curState) => ({
+      ...curState,
+      touched: { ...curState.touched, [evt.target.name]: true },
+    }));
+  const { firstName, lastName, phoneNumber, email } = state;
+  const errors = validate(firstName, lastName, phoneNumber, email);
+  console.log('ERRORS: ', errors);
+  //Q: what's the order of execution for this validate invocation?
   return (
     <div className="container">
       <div className="row">
@@ -98,7 +145,9 @@ const Contact = (props) => {
                   value={state.firstName}
                   placeholder="your first name"
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                 />
+                <FormFeedback>{errors.firstName}</FormFeedback>
               </Col>
             </FormGroup>
             <FormGroup row>
@@ -113,7 +162,9 @@ const Contact = (props) => {
                   value={state.lastName}
                   placeholder="your last name"
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                 />
+                <FormFeedback>{errors.lastName}</FormFeedback>
               </Col>
             </FormGroup>
             <FormGroup row>
@@ -128,7 +179,9 @@ const Contact = (props) => {
                   value={state.phoneNumber}
                   placeholder="your phone number"
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                 />
+                <FormFeedback>{errors.phoneNumber}</FormFeedback>
               </Col>
             </FormGroup>
             <FormGroup row>
@@ -143,8 +196,10 @@ const Contact = (props) => {
                   value={state.email}
                   placeholder="your email"
                   onChange={handleInputChange}
+                  onBlur={handleBlur}
                 />
               </Col>
+              <FormFeedback>{errors.email}</FormFeedback>
             </FormGroup>
             <FormGroup row>
               <Col md={{ size: 4, offset: 2 }}>
