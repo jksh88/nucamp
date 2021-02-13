@@ -1,39 +1,39 @@
 import React, { Component } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Directory from './DirectoryComponent';
 import Contact from './ContactComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent';
-import { CAMPSITES } from '../shared/campsites';
-import { COMMENTS } from '../shared/comments';
-import { PARTNERS } from '../shared/partners';
-import { PROMOTIONS } from '../shared/promotions';
+// import { CAMPSITES } from '../shared/campsites';
+// import { COMMENTS } from '../shared/comments';
+// import { PARTNERS } from '../shared/partners';
+// import { PROMOTIONS } from '../shared/promotions';
 import CampsiteInfo from './CampsiteInfoComponent';
 import About from './AboutComponent';
 
-class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      campsites: CAMPSITES,
-      comments: COMMENTS,
-      partners: PARTNERS,
-      promotions: PROMOTIONS,
-    };
-  }
+const mapStateToProps = (state) => {
+  return {
+    campsites: state.campsites,
+    comments: state.comments,
+    partners: state.partners,
+    promotions: state.promotions,
+  };
+};
 
+class Main extends Component {
   render() {
     const HomePage = () => {
       return (
         <Home
           campsite={
-            this.state.campsites.filter((campsite) => campsite.featured)[0]
+            this.props.campsites.filter((campsite) => campsite.featured)[0]
           }
           promotion={
-            this.state.promotions.filter((promotion) => promotion.featured)[0]
+            this.props.promotions.filter((promotion) => promotion.featured)[0]
           }
-          partner={this.state.partners.filter((partner) => partner.featured)[0]}
+          partner={this.props.partners.filter((partner) => partner.featured)[0]}
         />
       );
     };
@@ -42,11 +42,11 @@ class Main extends Component {
       return (
         <CampsiteInfo
           campsite={
-            this.state.campsites.filter(
+            this.props.campsites.filter(
               (campsite) => campsite.id === +match.params.campsiteId
             )[0]
           }
-          comments={this.state.comments.filter(
+          comments={this.props.comments.filter(
             (comment) => comment.campsiteId === +match.params.campsiteId
           )}
         />
@@ -66,8 +66,8 @@ class Main extends Component {
             render={(props) => (
               <Directory
                 {...props}
-                campsites={this.state.campsites}
-                comments={this.state.comments}
+                campsites={this.props.campsites}
+                comments={this.props.comments}
               />
             )}
           />
@@ -79,7 +79,7 @@ class Main extends Component {
           <Route
             exact
             path="/aboutus"
-            render={(props) => <About partners={this.state.partners} />}
+            render={(props) => <About partners={this.props.partners} />}
           />
           <Route exact path="/contactus" component={Contact} />
           <Redirect to="/home" />
@@ -90,4 +90,6 @@ class Main extends Component {
   }
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps)(Main));
+
+//Q: Why do we need withRouter? What is it subscribing to?

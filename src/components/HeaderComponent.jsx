@@ -34,7 +34,9 @@ class Header extends Component {
     this.setState((curState) => ({ isNavOpen: !curState.isNavOpen }));
 
   handleLogin = (evt) => {
-    alert(`Username: ${this.username.value} logged in`);
+    alert(
+      `Username: ${this.username.value} Remember: ${this.remember.checked}`
+    );
     // evt.preventDefault();
     // this.toggleModal();
   };
@@ -141,5 +143,6 @@ class Header extends Component {
     );
   }
 }
+//Q: Why is the value="submit" necessary in Button?
 
 export default Header;
