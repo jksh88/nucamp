@@ -116,7 +116,7 @@ class Contact extends React.Component {
                     className="text-danger"
                     model=".firstName"
                     show="touched"
-                    component="div"
+                    // component="div"
                     messages={{
                       required: 'Required',
                       minLength: 'Must be at least 2 characters',
@@ -243,7 +243,7 @@ class Contact extends React.Component {
                     className="form-control"
                     id="feedback"
                     name="feedback"
-                    row="10"
+                    rows={10}
                   />
                 </Col>
               </Row>
