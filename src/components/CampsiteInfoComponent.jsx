@@ -34,17 +34,24 @@ class CommentForm extends React.Component {
 
   handleSubmit = (values) => {
     console.log(JSON.stringify(values)); //Q: Why is this not console.loging?
-    alert(JSON.stringify(values));
+    alert(
+      `Current State is: ${JSON.stringify({
+        rating: values.rating,
+        author: values.author,
+        text: values.comment,
+      })}`
+    );
   };
   render() {
     return (
       <>
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-          <ModalHeader>Submit Comment</ModalHeader>
+          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
           <ModalBody>
             <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
               <Label htmlFor="rating">Rating</Label>
               <Control.select
+                defaultValue="1"
                 model=".rating"
                 name="rating"
                 id="rating"
