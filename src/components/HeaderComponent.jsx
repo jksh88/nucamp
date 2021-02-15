@@ -7,6 +7,14 @@ import {
   NavbarToggler,
   Collapse,
   NavItem,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  Form,
+  FormGroup,
+  Input,
+  Label,
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
@@ -15,13 +23,24 @@ class Header extends Component {
     super(props);
     this.state = {
       isNavOpen: false,
+      isModalOpen: false,
     };
   }
 
-  toggleNav = () => {
-    this.setState((curState) => ({ isNavOpen: !curState.isNavOpen }));
-  };
+  toggleModal = () =>
+    this.setState((curState) => ({ isModalOpen: !curState.isModalOpen }));
 
+  toggleNav = () =>
+    this.setState((curState) => ({ isNavOpen: !curState.isNavOpen }));
+
+  handleLogin = (evt) => {
+    alert(
+      `Username: ${this.username.value} Remember: ${this.remember.checked}`
+    );
+    // evt.preventDefault();
+    // this.toggleModal();
+  };
+  //Q: Why when I don't use evt.preventDefault(), modal closese when alert is closed? If I use it, it doesn't until I manually close the it.
   render() {
     return (
       <>
@@ -75,12 +94,55 @@ class Header extends Component {
                   </NavLink>
                 </NavItem>
               </Nav>
+              <span className="navbar-text ml-auto">
+                <Button outline onClick={this.toggleModal}>
+                  <i className="fa fa-sign-in fa-lg" />
+                </Button>
+              </span>
             </Collapse>
           </div>
         </Navbar>
+
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+          <ModalBody>
+            <Form onSubmit={this.handleLogin}>
+              <FormGroup>
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  type="text"
+                  id="username"
+                  innerRef={(input) => (this.username = input)}
+                  name="username"
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  innerRef={(input) => (this.password = input)}
+                />
+              </FormGroup>
+              <FormGroup check>
+                <Label check>
+                  <Input
+                    type="checkbox"
+                    name="remember"
+                    innerRef={(input) => (this.remember = input)}
+                  />
+                  Remember me
+                </Label>
+              </FormGroup>
+              <Button type="submit" value="submit" color="primary">
+                Sign me in
+              </Button>
+            </Form>
+          </ModalBody>
+        </Modal>
       </>
     );
   }
 }
+//Q: Why is the value="submit" necessary in Button?
 
 export default Header;
