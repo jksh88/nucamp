@@ -25,7 +25,7 @@ class CommentForm extends React.Component {
     super(props);
     this.state = {
       isModalOpen: false,
-      author: '',
+      author: '', //TODO: TO delete
     };
   }
 
@@ -33,7 +33,14 @@ class CommentForm extends React.Component {
     this.setState((prevState) => ({ isModalOpen: !prevState.isModalOpen }));
 
   handleSubmit = (values) => {
-    console.log(JSON.stringify(values)); //Q: Why is this not console.logging?
+    // this.toggleModal();
+    this.props.addComment(
+      this.props.campsiteId,
+      values.rating,
+      values.author,
+      values.text
+    );
+    // console.log(JSON.stringify(values)); //Q: Why is this not console.logging?
     alert(
       `Current State is: ${JSON.stringify({
         rating: values.rating,
@@ -111,7 +118,7 @@ class CommentForm extends React.Component {
   }
 }
 
-const RenderComments = (comments) => {
+const RenderComments = ({ comments, addComment, campsiteId }) => {
   if (comments) {
     return (
       <div className="col-md-5 m-1">
@@ -127,14 +134,14 @@ const RenderComments = (comments) => {
             }).format(Date.parse(comment.date))}`}
           </p>
         ))}
-        <CommentForm />
+        <CommentForm addComment={addComment} campsiteId={campsiteId} />
       </div>
     );
   }
   return <div />;
 };
 
-const RenderCampsite = (campsite) => (
+const RenderCampsite = ({ campsite }) => (
   <div className="col-md-5 m-1">
     <Card>
       <CardImg top src={campsite.image} alt={campsite.name} />
@@ -145,7 +152,7 @@ const RenderCampsite = (campsite) => (
   </div>
 );
 
-const CampsiteInfo = ({ campsite, comments }) => {
+const CampsiteInfo = ({ campsite, comments, addComment, campsiteId }) => {
   return campsite ? (
     <div className="container">
       <div className="row">
@@ -160,8 +167,14 @@ const CampsiteInfo = ({ campsite, comments }) => {
           <hr />
         </div>
         <div className="row">
-          {RenderCampsite(campsite)}
-          {RenderComments(comments)}
+          <RenderCampsite campsite={campsite} />
+          <RenderComments
+            comments={comments}
+            addComment={addComment}
+            campsiteId={campsiteId}
+          />
+          {/* {RenderCampsite(campsite)}
+          {RenderComments(comments)} */}
         </div>
       </div>
     </div>
