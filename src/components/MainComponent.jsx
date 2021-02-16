@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
 import Directory from './DirectoryComponent';
 import Contact from './ContactComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent';
-// import { CAMPSITES } from '../shared/campsites';
-// import { COMMENTS } from '../shared/comments';
-// import { PARTNERS } from '../shared/partners';
-// import { PROMOTIONS } from '../shared/promotions';
 import CampsiteInfo from './CampsiteInfoComponent';
 import About from './AboutComponent';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { addComment } from '../redux/ActionCreators';
 
 const mapStateToProps = (state) => {
   return {
@@ -20,6 +17,11 @@ const mapStateToProps = (state) => {
     partners: state.partners,
     promotions: state.promotions,
   };
+};
+
+const mapDispatchToProps = {
+  addComment: (campsiteId, rating, author, text) =>
+    addComment(campsiteId, rating, author, text),
 };
 
 class Main extends Component {
@@ -49,6 +51,7 @@ class Main extends Component {
           comments={this.props.comments.filter(
             (comment) => comment.campsiteId === +match.params.campsiteId
           )}
+          addComment={this.props.addComment}
         />
       );
     };
@@ -90,6 +93,10 @@ class Main extends Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
+
+//By adding mapDispatchToProps here as the second argument for connect function, we have just made it possible for mapDispatchToProps property function(in this case 'addComment')
+//to be passed as a prop in this component(<Main>)
+//mapStateToProps is a function that you would use to provide the store data to your component, whereas mapDispatchToProps is something that you will use to provide the action creators as props to your component.
 
 //Q: Why do we need withRouter? What is it subscribing to?

@@ -33,7 +33,7 @@ class CommentForm extends React.Component {
     this.setState((prevState) => ({ isModalOpen: !prevState.isModalOpen }));
 
   handleSubmit = (values) => {
-    console.log(JSON.stringify(values)); //Q: Why is this not console.loging?
+    console.log(JSON.stringify(values)); //Q: Why is this not console.logging?
     alert(
       `Current State is: ${JSON.stringify({
         rating: values.rating,
