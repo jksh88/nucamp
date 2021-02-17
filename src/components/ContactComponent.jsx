@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,42 +9,40 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Control, LocalForm, Errors } from 'react-redux-form';
-import { render } from '@testing-library/react';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
-const validPhoneNumber = (val) => /^[0-9]+$/.test(val);
-
+const isNumber = (val) => !isNaN(+val);
 const validEmail = (val) =>
-  /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(val);
-
-const initialState = {
-  firstName: '',
-  lastName: '',
-  phoneNumber: '',
-  email: '',
-  agree: false,
-  contactType: 'By phone',
-  feedback: '',
-  touched: {
-    firstName: false,
-    lastName: false,
-    phoneNumber: false,
-    email: false,
-  },
-};
-
-class Contact extends React.Component {
+  /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
+class Contact extends Component {
   constructor(props) {
     super(props);
-    this.state = initialState;
+
+    this.state = {
+      firstName: '',
+      lastName: '',
+      phoneNum: '',
+      email: '',
+      agree: false,
+      contactType: 'By Phone',
+      feedback: '',
+      touched: {
+        firstName: false,
+        lastName: false,
+        phoneNum: false,
+        email: false,
+      },
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit = (values) => {
-    alert('Current state is: ' + JSON.stringify(values));
-    console.log('Current state is: ' + JSON.stringify(values));
-  };
+  handleSubmit(values) {
+    console.log('Current state is ' + JSON.stringify(values));
+    alert('Current state is ' + JSON.stringify(values));
+  }
 
   render() {
     return (
@@ -55,8 +53,7 @@ class Contact extends React.Component {
               <BreadcrumbItem>
                 <Link to="/home">Home</Link>
               </BreadcrumbItem>
-
-              <BreadcrumbItem active>Contact us</BreadcrumbItem>
+              <BreadcrumbItem active>Contact Us</BreadcrumbItem>
             </Breadcrumb>
             <h2>Contact Us</h2>
             <hr />
@@ -91,7 +88,7 @@ class Contact extends React.Component {
 
         <div className="row row-content">
           <div className="col-12">
-            <h2>Send us your feedback</h2>
+            <h2>Send us your Feedback</h2>
             <hr />
           </div>
           <div className="col-md-10">
@@ -103,24 +100,25 @@ class Contact extends React.Component {
                 <Col md={10}>
                   <Control.text
                     model=".firstName"
-                    className="form-control"
                     id="firstName"
                     name="firstName"
+                    placeholder="First Name"
+                    className="form-control"
                     validators={{
                       required,
                       minLength: minLength(2),
-                      maxLength: maxLength(20),
+                      maxLength: maxLength(15),
                     }}
                   />
                   <Errors
                     className="text-danger"
                     model=".firstName"
                     show="touched"
-                    // component="div"
+                    component="div"
                     messages={{
                       required: 'Required',
                       minLength: 'Must be at least 2 characters',
-                      maxLength: 'Must be 20 characters or less',
+                      maxLength: 'Must be 15 characters or less',
                     }}
                   />
                 </Col>
@@ -132,13 +130,14 @@ class Contact extends React.Component {
                 <Col md={10}>
                   <Control.text
                     model=".lastName"
-                    className="form-control"
                     id="lastName"
                     name="lastName"
+                    placeholder="Last Name"
+                    className="form-control"
                     validators={{
                       required,
                       minLength: minLength(2),
-                      maxLength: maxLength(20),
+                      maxLength: maxLength(15),
                     }}
                   />
                   <Errors
@@ -149,35 +148,39 @@ class Contact extends React.Component {
                     messages={{
                       required: 'Required',
                       minLength: 'Must be at least 2 characters',
-                      maxLength: 'Must be 20 characters or less',
+                      maxLength: 'Must be 15 characters or less',
                     }}
                   />
                 </Col>
               </Row>
               <Row className="form-group">
-                <Label htmlFor="phoneNumber" md={2}>
-                  Phone Number
+                <Label htmlFor="phoneNum" md={2}>
+                  Phone
                 </Label>
                 <Col md={10}>
                   <Control.text
-                    model=".phoneNumber"
+                    model=".phoneNum"
+                    id="phoneNum"
+                    name="phoneNum"
+                    placeholder="Phone number"
                     className="form-control"
-                    id="phoneNumber"
-                    name="phoneNumber"
                     validators={{
                       required,
-                      validPhoneNumber,
+                      minLength: minLength(10),
+                      maxLength: maxLength(15),
+                      isNumber,
                     }}
                   />
                   <Errors
                     className="text-danger"
-                    model=".phoneNumber"
+                    model=".phoneNum"
                     show="touched"
                     component="div"
                     messages={{
                       required: 'Required',
-                      validPhoneNumber:
-                        'Enter your seven digits without () or -',
+                      minLength: 'Must be at least 10 numbers',
+                      maxLength: 'Must be 15 numbers or less',
+                      isNumber: 'Must be a number',
                     }}
                   />
                 </Col>
@@ -189,9 +192,10 @@ class Contact extends React.Component {
                 <Col md={10}>
                   <Control.text
                     model=".email"
-                    className="form-control"
                     id="email"
                     name="email"
+                    placeholder="Email"
+                    className="form-control"
                     validators={{
                       required,
                       validEmail,
@@ -215,10 +219,10 @@ class Contact extends React.Component {
                     <Label check>
                       <Control.checkbox
                         model=".agree"
-                        className="form-check-input"
                         name="agree"
-                      />
-                      You may contact me
+                        className="form-check-input"
+                      />{' '}
+                      <strong>May we contact you?</strong>
                     </Label>
                   </div>
                 </Col>
@@ -235,22 +239,22 @@ class Contact extends React.Component {
               </Row>
               <Row className="form-group">
                 <Label htmlFor="feedback" md={2}>
-                  Your feedback
+                  Your Feedback
                 </Label>
                 <Col md={10}>
                   <Control.textarea
                     model=".feedback"
-                    className="form-control"
                     id="feedback"
                     name="feedback"
-                    rows={10}
+                    rows="12"
+                    className="form-control"
                   />
                 </Col>
               </Row>
               <Row className="form-group">
-                <Col md={{ size: 4, offset: 2 }}>
+                <Col md={{ size: 10, offset: 2 }}>
                   <Button type="submit" color="primary">
-                    Submit
+                    Send Feedback
                   </Button>
                 </Col>
               </Row>
@@ -263,3 +267,270 @@ class Contact extends React.Component {
 }
 
 export default Contact;
+
+// import React from 'react';
+// import {
+//   Breadcrumb,
+//   BreadcrumbItem,
+//   Button,
+//   Label,
+//   Col,
+//   Row,
+// } from 'reactstrap';
+// import { Link } from 'react-router-dom';
+// import { Control, LocalForm, Errors } from 'react-redux-form';
+// import { render } from '@testing-library/react';
+
+// const required = (val) => val && val.length;
+// const maxLength = (len) => (val) => !val || val.length <= len;
+// const minLength = (len) => (val) => val && val.length >= len;
+// const validPhoneNumber = (val) => /^[0-9]+$/.test(val);
+// const validEmail = (val) =>
+//   /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(val);
+
+// const initialState = {
+//   firstName: '',
+//   lastName: '',
+//   phoneNumber: '',
+//   email: '',
+//   agree: false,
+//   contactType: 'By phone',
+//   feedback: '',
+//   touched: {
+//     firstName: false,
+//     lastName: false,
+//     phoneNumber: false,
+//     email: false,
+//   },
+// };
+
+// class Contact extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = initialState;
+//   }
+
+//   handleSubmit = (values) => {
+//     alert(values);
+//     console.log('hi');
+//     console.log('Current state is: ' + JSON.stringify(values));
+//     alert('Current state is: ' + JSON.stringify(values));
+//   };
+
+//   render() {
+//     return (
+//       <div className="container">
+//         <div className="row">
+//           <div className="col">
+//             <Breadcrumb>
+//               <BreadcrumbItem>
+//                 <Link to="/home">Home</Link>
+//               </BreadcrumbItem>
+
+//               <BreadcrumbItem active>Contact us</BreadcrumbItem>
+//             </Breadcrumb>
+//             <h2>Contact Us</h2>
+//             <hr />
+//           </div>
+//         </div>
+
+//         <div className="row row-content align-items-center">
+//           <div className="col-sm-4">
+//             <h5>Our Address</h5>
+//             <address>
+//               1 Nucamp Way
+//               <br />
+//               Seattle, WA 98001
+//               <br />
+//               U.S.A.
+//             </address>
+//           </div>
+//           <div className="col">
+//             <a role="button" className="btn btn-link" href="tel:+12065551234">
+//               <i className="fa fa-phone" /> 1-206-555-1234
+//             </a>
+//             <br />
+//             <a
+//               role="button"
+//               className="btn btn-link"
+//               href="mailto:fakeemail@fakeemail.co"
+//             >
+//               <i className="fa fa-envelope-o" /> campsites@nucamp.co
+//             </a>
+//           </div>
+//         </div>
+
+//         <div className="row row-content">
+//           <div className="col-12">
+//             <h2>Send us your feedback</h2>
+//             <hr />
+//           </div>
+//           <div className="col-md-10">
+//             <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+//               <Row className="form-group">
+//                 <Label htmlFor="firstName" md={2}>
+//                   First Name
+//                 </Label>
+//                 <Col md={10}>
+//                   <Control.text
+//                     model=".firstName"
+//                     className="form-control"
+//                     id="firstName"
+//                     name="firstName"
+//                     validators={{
+//                       required,
+//                       minLength: minLength(2),
+//                       maxLength: maxLength(20),
+//                     }}
+//                   />
+//                   <Errors
+//                     className="text-danger"
+//                     model=".firstName"
+//                     show="touched"
+//                     // component="div"
+//                     messages={{
+//                       required: 'Required',
+//                       minLength: 'Must be at least 2 characters',
+//                       maxLength: 'Must be 20 characters or less',
+//                     }}
+//                   />
+//                 </Col>
+//               </Row>
+//               <Row className="form-group">
+//                 <Label htmlFor="lastName" md={2}>
+//                   Last Name
+//                 </Label>
+//                 <Col md={10}>
+//                   <Control.text
+//                     model=".lastName"
+//                     className="form-control"
+//                     id="lastName"
+//                     name="lastName"
+//                     validators={{
+//                       required,
+//                       minLength: minLength(2),
+//                       maxLength: maxLength(20),
+//                     }}
+//                   />
+//                   <Errors
+//                     className="text-danger"
+//                     model=".lastName"
+//                     show="touched"
+//                     component="div"
+//                     messages={{
+//                       required: 'Required',
+//                       minLength: 'Must be at least 2 characters',
+//                       maxLength: 'Must be 20 characters or less',
+//                     }}
+//                   />
+//                 </Col>
+//               </Row>
+//               <Row className="form-group">
+//                 <Label htmlFor="phoneNumber" md={2}>
+//                   Phone Number
+//                 </Label>
+//                 <Col md={10}>
+//                   <Control.text
+//                     model=".phoneNumber"
+//                     className="form-control"
+//                     id="phoneNumber"
+//                     name="phoneNumber"
+//                     validators={{
+//                       required,
+//                       validPhoneNumber,
+//                     }}
+//                   />
+//                   <Errors
+//                     className="text-danger"
+//                     model=".phoneNumber"
+//                     show="touched"
+//                     component="div"
+//                     messages={{
+//                       required: 'Required',
+//                       validPhoneNumber:
+//                         'Enter your seven digits without () or -',
+//                     }}
+//                   />
+//                 </Col>
+//               </Row>
+//               <Row className="form-group">
+//                 <Label htmlFor="email" md={2}>
+//                   Email
+//                 </Label>
+//                 <Col md={10}>
+//                   <Control.text
+//                     model=".email"
+//                     className="form-control"
+//                     id="email"
+//                     name="email"
+//                     validators={{
+//                       required,
+//                       validEmail,
+//                     }}
+//                   />
+//                   <Errors
+//                     className="text-danger"
+//                     model=".email"
+//                     show="touched"
+//                     component="div"
+//                     messages={{
+//                       required: 'Required',
+//                       validEmail: 'Invalid email address',
+//                     }}
+//                   />
+//                 </Col>
+//               </Row>
+//               <Row className="form-group">
+//                 <Col md={{ size: 4, offset: 2 }}>
+//                   <div className="form-check">
+//                     <Label check>
+//                       <Control.checkbox
+//                         model=".agree"
+//                         className="form-check-input"
+//                         name="agree"
+//                       />
+//                       You may contact me
+//                     </Label>
+//                   </div>
+//                 </Col>
+//                 <Col md={4}>
+//                   <Control.select
+//                     model=".contactType"
+//                     name="contactType"
+//                     className="form-control"
+//                   >
+//                     <option>By Phone</option>
+//                     <option>By Email</option>
+//                   </Control.select>
+//                 </Col>
+//               </Row>
+//               <Row className="form-group">
+//                 <Label htmlFor="feedback" md={2}>
+//                   Your feedback
+//                 </Label>
+//                 <Col md={10}>
+//                   <Control.textarea
+//                     model=".feedback"
+//                     className="form-control"
+//                     id="feedback"
+//                     name="feedback"
+//                     rows={10}
+//                   />
+//                 </Col>
+//               </Row>
+//               <Row className="form-group">
+//                 <Col md={{ size: 4, offset: 2 }}>
+//                   <Button type="submit" color="primary">
+//                     Submit
+//                   </Button>
+//                 </Col>
+//               </Row>
+//             </LocalForm>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+
+// export default Contact;

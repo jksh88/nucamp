@@ -2,10 +2,8 @@ import React from 'react';
 import {
   Card,
   CardImg,
-  CardImgOverlay,
   CardText,
   CardBody,
-  CardTitle,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -38,9 +36,10 @@ class CommentForm extends React.Component {
       this.props.campsiteId,
       values.rating,
       values.author,
-      values.text
+      values.comment
     );
-    // console.log(JSON.stringify(values)); //Q: Why is this not console.logging?
+    console.log(JSON.stringify(values));
+    console.log('CampsiteId***', this.props.campsiteId);
     alert(
       `Current State is: ${JSON.stringify({
         rating: values.rating,
@@ -119,12 +118,14 @@ class CommentForm extends React.Component {
 }
 
 const RenderComments = ({ comments, addComment, campsiteId }) => {
+  console.log('CampsiteId*** at RenderComments', campsiteId);
+
   if (comments) {
     return (
       <div className="col-md-5 m-1">
         <h4>Comments</h4>
         {comments.map((comment) => (
-          <p>
+          <p key={comment.id}>
             {comment.text}
             <br />
             {`--${comment.author}, ${new Intl.DateTimeFormat('en-US', {
@@ -152,7 +153,9 @@ const RenderCampsite = ({ campsite }) => (
   </div>
 );
 
-const CampsiteInfo = ({ campsite, comments, addComment, campsiteId }) => {
+const CampsiteInfo = ({ campsite, comments, addComment }) => {
+  console.log('CampsiteId*** at CampsiteInfo', campsite.id);
+
   return campsite ? (
     <div className="container">
       <div className="row">
@@ -171,7 +174,7 @@ const CampsiteInfo = ({ campsite, comments, addComment, campsiteId }) => {
           <RenderComments
             comments={comments}
             addComment={addComment}
-            campsiteId={campsiteId}
+            campsiteId={campsite.id}
           />
           {/* {RenderCampsite(campsite)}
           {RenderComments(comments)} */}
@@ -182,5 +185,7 @@ const CampsiteInfo = ({ campsite, comments, addComment, campsiteId }) => {
     <div />
   );
 };
+
+//In CampsiteInfo, don't pass in campsiteId as the prop. It is the parameter used in the route and not the campsite object that has the four properties including campsite.id!
 
 export default CampsiteInfo;
