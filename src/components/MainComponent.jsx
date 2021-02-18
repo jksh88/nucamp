@@ -26,7 +26,7 @@ const mapDispatchToProps = {
 };
 
 class Main extends Component {
-  componentDidMount = () => {};
+  componentDidMount = () => this.props.fetchCampsites();
   //Since campsites array now hold 'isLoding', and 'errorMessage' objects as additional elements(see the reducer), to access the campsites array of campsite objects
   //on the inside of the outermost campsites array, it is necessary to go 'campsites.campsites' here.
   render() {
