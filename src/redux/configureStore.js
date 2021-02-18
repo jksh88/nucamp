@@ -4,8 +4,11 @@ import { Comments } from './comments';
 import { Partners } from './partners';
 import { Promotions } from './promotions';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import thunkMiddleware from 'redux-thunk';
+import { logger } from 'redux-logger';
 
 export const ConfigureStore = () => {
+  const middlewares = [thunkMiddleware, logger];
   const store = createStore(
     combineReducers({
       campsites: Campsites,
@@ -13,7 +16,7 @@ export const ConfigureStore = () => {
       partners: Partners,
       promotions: Promotions,
     }),
-    composeWithDevTools(applyMiddleware())
+    composeWithDevTools(applyMiddleware(...middlewares))
   );
   return store;
 };

@@ -7,6 +7,7 @@ import {
   BreadcrumbItem,
 } from 'reactstrap';
 import { useHistory, Link } from 'react-router-dom';
+import { Loading } from './LoadingComponents';
 
 const RenderDirectoryItem = ({ campsite, comments }) => {
   const history = useHistory();
@@ -21,11 +22,25 @@ const RenderDirectoryItem = ({ campsite, comments }) => {
 };
 
 const Directory = ({ campsites, comments }) => {
-  const directory = campsites.map((campsite) => (
+  const directory = campsites.campsites.map((campsite) => (
     <div className="col-md-5 m-1" key={campsite.id}>
       <RenderDirectoryItem campsite={campsite} comments={comments} />
     </div>
   ));
+  if (campsites.isLoading) {
+    return <Loading />;
+  }
+  if (campsites.errorMessage) {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h4>{campsites.errorMessage}</h4>;
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="container">
       <div className="row">

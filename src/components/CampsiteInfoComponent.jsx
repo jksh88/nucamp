@@ -14,6 +14,7 @@ import {
 } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponents';
 
 const minLen = (val) => val && val.toString().length >= 2;
 const maxLen = (val) => val && val.toString().length <= 15;
@@ -153,9 +154,35 @@ const RenderCampsite = ({ campsite }) => (
   </div>
 );
 
-const CampsiteInfo = ({ campsite, comments, addComment }) => {
-  console.log('CampsiteId*** at CampsiteInfo', campsite.id);
+const CampsiteInfo = ({
+  campsite,
+  comments,
+  addComment,
+  isLoading,
+  errorMessage,
+}) => {
+  console.log('CampsiteId*** at CampsiteInfo', campsite && campsite.id);
 
+  if (isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+  if (errorMessage) {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h4>{errorMessage}</h4>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return campsite ? (
     <div className="container">
       <div className="row">
