@@ -13,7 +13,10 @@ export const addComment = (campsiteId, rating, author, text) => ({
 
 export const fetchCampsites = () => (dispatch) => {
   dispatch(campsitesLoading());
-  setTimeout(() => dispatch(addCampsites(CAMPSITES)), 2000);
+  fetch('http://localhost:3004/campsites')
+    .then((res) => res.json())
+    .then(() => dispatch(addCampsites(CAMPSITES)))
+    .catch((err) => console.log(err));
 };
 //Q: where is this 'dispatch' coming from?
 
