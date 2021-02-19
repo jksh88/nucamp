@@ -2,10 +2,8 @@ import React from 'react';
 import {
   Card,
   CardImg,
-  CardImgOverlay,
   CardText,
   CardBody,
-  CardTitle,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -16,6 +14,7 @@ import {
 } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
+import { Loading } from './LoadingComponents';
 
 const minLen = (val) => val && val.toString().length >= 2;
 const maxLen = (val) => val && val.toString().length <= 15;
@@ -25,7 +24,7 @@ class CommentForm extends React.Component {
     super(props);
     this.state = {
       isModalOpen: false,
-      author: '',
+      author: '', //TODO: TO delete
     };
   }
 
@@ -33,18 +32,33 @@ class CommentForm extends React.Component {
     this.setState((prevState) => ({ isModalOpen: !prevState.isModalOpen }));
 
   handleSubmit = (values) => {
-    console.log(JSON.stringify(values)); //Q: Why is this not console.loging?
-    alert(JSON.stringify(values));
+    // this.toggleModal();
+    this.props.addComment(
+      this.props.campsiteId,
+      values.rating,
+      values.author,
+      values.comment
+    );
+    console.log(JSON.stringify(values));
+    console.log('CampsiteId***', this.props.campsiteId);
+    alert(
+      `Current State is: ${JSON.stringify({
+        rating: values.rating,
+        author: values.author,
+        text: values.comment,
+      })}`
+    );
   };
   render() {
     return (
       <>
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
-          <ModalHeader>Submit Comment</ModalHeader>
+          <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
           <ModalBody>
             <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
               <Label htmlFor="rating">Rating</Label>
               <Control.select
+                defaultValue="1"
                 model=".rating"
                 name="rating"
                 id="rating"
@@ -104,13 +118,15 @@ class CommentForm extends React.Component {
   }
 }
 
-const RenderComments = (comments) => {
+const RenderComments = ({ comments, addComment, campsiteId }) => {
+  console.log('CampsiteId*** at RenderComments', campsiteId);
+
   if (comments) {
     return (
       <div className="col-md-5 m-1">
         <h4>Comments</h4>
         {comments.map((comment) => (
-          <p>
+          <p key={comment.id}>
             {comment.text}
             <br />
             {`--${comment.author}, ${new Intl.DateTimeFormat('en-US', {
@@ -120,14 +136,14 @@ const RenderComments = (comments) => {
             }).format(Date.parse(comment.date))}`}
           </p>
         ))}
-        <CommentForm />
+        <CommentForm addComment={addComment} campsiteId={campsiteId} />
       </div>
     );
   }
   return <div />;
 };
 
-const RenderCampsite = (campsite) => (
+const RenderCampsite = ({ campsite }) => (
   <div className="col-md-5 m-1">
     <Card>
       <CardImg top src={campsite.image} alt={campsite.name} />
@@ -138,7 +154,35 @@ const RenderCampsite = (campsite) => (
   </div>
 );
 
-const CampsiteInfo = ({ campsite, comments }) => {
+const CampsiteInfo = ({
+  campsite,
+  comments,
+  addComment,
+  isLoading,
+  errorMessage,
+}) => {
+  console.log('CampsiteId*** at CampsiteInfo', campsite && campsite.id);
+
+  if (isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
+      </div>
+    );
+  }
+  if (errorMessage) {
+    return (
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <h4>{errorMessage}</h4>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return campsite ? (
     <div className="container">
       <div className="row">
@@ -153,8 +197,14 @@ const CampsiteInfo = ({ campsite, comments }) => {
           <hr />
         </div>
         <div className="row">
-          {RenderCampsite(campsite)}
-          {RenderComments(comments)}
+          <RenderCampsite campsite={campsite} />
+          <RenderComments
+            comments={comments}
+            addComment={addComment}
+            campsiteId={campsite.id}
+          />
+          {/* {RenderCampsite(campsite)}
+          {RenderComments(comments)} */}
         </div>
       </div>
     </div>
@@ -162,5 +212,7 @@ const CampsiteInfo = ({ campsite, comments }) => {
     <div />
   );
 };
+
+//In CampsiteInfo, don't pass in campsiteId as the prop. It is the parameter used in the route and not the campsite object that has the four properties including campsite.id!
 
 export default CampsiteInfo;

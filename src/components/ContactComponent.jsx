@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,14 +8,13 @@ import {
   Row,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { Control, LocalForm, Errors } from 'react-redux-form';
+import { Control, Form, Errors, actions } from 'react-redux-form';
 import { render } from '@testing-library/react';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !val || val.length <= len;
 const minLength = (len) => (val) => val && val.length >= len;
 const validPhoneNumber = (val) => /^[0-9]+$/.test(val);
-
 const validEmail = (val) =>
   /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(val);
 
@@ -42,10 +41,14 @@ class Contact extends React.Component {
   }
 
   handleSubmit = (values) => {
-    alert('Current state is: ' + JSON.stringify(values));
+    alert(values);
+    console.log('hi');
     console.log('Current state is: ' + JSON.stringify(values));
+    alert('Current state is: ' + JSON.stringify(values));
+    this.props.resetFeedbackForm();
   };
-
+  //Q: How are the values in the form saved into the store if handleSubmit doesn't handle that and there is no reducer for handling feedback?
+  //In <Form> don't forget to put in model="....". This is to link the form values with the redux store.
   render() {
     return (
       <div className="container">
@@ -95,7 +98,10 @@ class Contact extends React.Component {
             <hr />
           </div>
           <div className="col-md-10">
-            <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+            <Form
+              model="feedbackForm"
+              onSubmit={(values) => this.handleSubmit(values)}
+            >
               <Row className="form-group">
                 <Label htmlFor="firstName" md={2}>
                   First Name
@@ -254,7 +260,7 @@ class Contact extends React.Component {
                   </Button>
                 </Col>
               </Row>
-            </LocalForm>
+            </Form>
           </div>
         </div>
       </div>

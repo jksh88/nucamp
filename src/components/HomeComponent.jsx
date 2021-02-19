@@ -1,7 +1,14 @@
 import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
+import { Loading } from './LoadingComponents';
 
-const RenderCard = ({ item }) => {
+const RenderCard = ({ item, campsitesLoading, campsitesErrorMessage }) => {
+  if (campsitesLoading) {
+    return <Loading />;
+  }
+  if (campsitesErrorMessage) {
+    return <h4>{campsitesErrorMessage}</h4>;
+  }
   const { image, name, description } = item;
   return (
     <Card>
@@ -14,11 +21,21 @@ const RenderCard = ({ item }) => {
   );
 };
 
-const Home = ({ campsite, promotion, partner }) => (
+const Home = ({
+  campsite,
+  promotion,
+  partner,
+  campsitesLoading,
+  campsitesErrorMessage,
+}) => (
   <div className="container">
     <div className="row">
       <div className="col-md m-1">
-        <RenderCard item={campsite} />
+        <RenderCard
+          item={campsite}
+          campsitesLoading={campsitesLoading}
+          campsitesErrorMessage={campsitesErrorMessage}
+        />
       </div>
       <div className="col-md m-1">
         <RenderCard item={promotion} />
