@@ -20,7 +20,7 @@ const RenderDirectoryItem = ({ campsite, comments }) => {
     </Card>
   );
 };
-
+//TODO: comments prop removal for now? Note different level before action creator is written.
 const Directory = ({ campsites, comments }) => {
   const directory = campsites.campsites.map((campsite) => (
     <div className="col-md-5 m-1" key={campsite.id}>

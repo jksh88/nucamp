@@ -11,22 +11,11 @@ export const addComment = (campsiteId, rating, author, text) => ({
   },
 });
 
-// export const addCampsites = () => ({
-//   type: ActionTypes.ADD_CAMPSITES,
-//   payload: {
-//     id,
-//     name,
-//     image,
-//     elevation,
-//     featured,
-//     description,
-//   },
-// });
-
 export const fetchCampsites = () => (dispatch) => {
   dispatch(campsitesLoading());
   setTimeout(() => dispatch(addCampsites(CAMPSITES)), 2000);
 };
+//Q: where is this 'dispatch' coming from?
 
 export const campsitesLoading = () => ({
   type: ActionTypes.CAMPSITES_LOADING,

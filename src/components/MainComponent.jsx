@@ -9,6 +9,7 @@ import About from './AboutComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { addComment, fetchCampsites } from '../redux/ActionCreators';
+import { actions } from 'react-redux-form';
 
 const mapStateToProps = (state) => {
   return {
@@ -19,10 +20,13 @@ const mapStateToProps = (state) => {
   };
 };
 
+//TODO: To double-check: mapDispatchToProps is an object literarl and mapStateToProps is a function
+//dispatch => {} ?
 const mapDispatchToProps = {
   addComment: (campsiteId, rating, author, text) =>
     addComment(campsiteId, rating, author, text),
   fetchCampsites: () => fetchCampsites(), //Q: How come no parameters?
+  resetFeedbackForm: () => actions.reset('feedbackForm'), // the modelname that was used was 'feedbackForm' in configureStore so using that here
 };
 
 class Main extends Component {
@@ -96,7 +100,13 @@ class Main extends Component {
             path="/aboutus"
             render={(props) => <About partners={this.props.partners} />}
           />
-          <Route exact path="/contactus" component={Contact} />
+          <Route
+            exact
+            path="/contactus"
+            render={() => (
+              <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+            )}
+          />
           <Redirect to="/home" />
         </Switch>
         <Footer />
