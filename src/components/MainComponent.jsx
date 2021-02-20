@@ -25,27 +25,30 @@ const mapStateToProps = (state) => {
     promotions: state.promotions,
   };
 };
+//Q: Why is the state empty????
 
 //TODO: To double-check: mapDispatchToProps is an object literarl and mapStateToProps is a function
 //dispatch => {} ?
 const mapDispatchToProps = {
   addComment: (campsiteId, rating, author, text) =>
     addComment(campsiteId, rating, author, text),
-  fetchCampsites: () => fetchCampsites(), //Q: How come no parameters?
+  fetchCampsites: () => fetchCampsites(),
   resetFeedbackForm: () => actions.reset('feedbackForm'),
   fetchComments: () => fetchComments(),
   fetchPromotions: () => fetchPromotions(), // the modelname that was used was 'feedbackForm' in configureStore so using that here
 };
 
 class Main extends Component {
-  componentDidMount = () => {
+  componentDidMount() {
     this.props.fetchCampsites();
     this.props.fetchComments();
     this.props.fetchPromotions();
-  };
+  }
   //Since campsites array now hold 'isLoding', and 'errorMessage' objects as additional elements(see the reducer), to access the campsites array of campsite objects
   //on the inside of the outermost campsites array, it is necessary to go 'campsites.campsites' here.
+  //Below, first campsites is an object and second campsites is the array inside
   render() {
+    console.log('INSIDE MAIN render method');
     const HomePage = () => {
       return (
         <Home
@@ -81,11 +84,13 @@ class Main extends Component {
           comments={this.props.comments.comments.filter(
             (comment) => comment.campsiteId === +match.params.campsiteId
           )}
+          commentsErrorMessage={this.props.comments.errorMessage}
           // campsiteId={match.params.campsiteId}
           addComment={this.props.addComment}
         />
       );
     };
+    //Note above errorMessage is for campsites fetching error. Fetching error is comments was named commentsErrorMessage.
 
     //Don't forget the '[0]' after I run filter. Filter always returns an array. If I forget this, I am passing the whole array and when child component needs a property of an element(which is the campsite object), it will be undefined.
     //Make sure to put the '+' in front of match. id from params is always a string(Think of a query string in url)

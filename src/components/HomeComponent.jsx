@@ -1,18 +1,20 @@
 import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
 import { Loading } from './LoadingComponents';
+import { baseUrl } from '../shared/baseUrl';
 
-const RenderCard = ({ item, campsitesLoading, campsitesErrorMessage }) => {
-  if (campsitesLoading) {
+const RenderCard = ({ item, isLoading, errorMessage }) => {
+  if (isLoading) {
     return <Loading />;
   }
-  if (campsitesErrorMessage) {
-    return <h4>{campsitesErrorMessage}</h4>;
+  if (errorMessage) {
+    return <h4>{errorMessage}</h4>;
   }
   const { image, name, description } = item;
+  console.log('ITEM at RENDERCARD: ', item);
   return (
     <Card>
-      <CardImg src={image} alt={name} />
+      <CardImg src={`${baseUrl}${image}`} alt={name} />
       <CardBody>
         <CardTitle>{name}</CardTitle>
         <CardTitle>{description}</CardTitle>
@@ -27,21 +29,33 @@ const Home = ({
   partner,
   campsitesLoading,
   campsitesErrorMessage,
+  promotionLoading,
+  promotionErrorMessage,
+  partnerLoading,
+  partnerErrorMessage,
 }) => (
   <div className="container">
     <div className="row">
       <div className="col-md m-1">
         <RenderCard
           item={campsite}
-          campsitesLoading={campsitesLoading}
-          campsitesErrorMessage={campsitesErrorMessage}
+          isLoading={campsitesLoading}
+          errorMessage={campsitesErrorMessage}
         />
       </div>
       <div className="col-md m-1">
-        <RenderCard item={promotion} />
+        <RenderCard
+          item={promotion}
+          isLoading={promotionLoading}
+          errorMessage={promotionErrorMessage}
+        />
       </div>
       <div className="col-md m-1">
-        <RenderCard item={partner} />
+        <RenderCard
+          item={partner}
+          isLoading={promotionLoading}
+          errorMessage={promotionErrorMessage}
+        />
       </div>
     </div>
   </div>

@@ -8,12 +8,18 @@ import {
   Media,
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { baseUrl } from '../shared/baseUrl';
 
 const RenderPartner = (partner) => {
   if (partner) {
     return (
       <>
-        <Media object src={partner.image} alt={partner.name} width="150" />
+        <Media
+          object
+          src={`${baseUrl}${partner.image}`}
+          alt={partner.name}
+          width="150"
+        />
         <Media body className="ml-5 mb-4">
           <Media heading>{partner.name}</Media>
           {partner.description}

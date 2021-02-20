@@ -5,11 +5,19 @@ import { baseUrl } from '../shared/baseUrl';
 
 //Q: What happens if no return again?
 //CAMPSITES
+//Q: Why is this never invoked?
 export const fetchCampsites = () => (dispatch) => {
+  console.log('INSIDE fetchCampsites!!');
   dispatch(campsitesLoading());
   return fetch(`${baseUrl}campsites`)
     .then((res) => res.json())
-    .then((campsites) => dispatch(addCampsites(campsites)))
+    .then((campsites) => {
+      console.log(
+        `fetched campsites at actionCreator: ${baseUrl}campsites`,
+        campsites
+      );
+      dispatch(addCampsites(campsites));
+    })
     .catch((err) => console.log(err));
 };
 //Q: where is this 'dispatch' coming from? A: It is used to 'dispatch' data into Redux store
