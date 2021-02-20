@@ -8,10 +8,16 @@ import CampsiteInfo from './CampsiteInfoComponent';
 import About from './AboutComponent';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addComment, fetchCampsites } from '../redux/ActionCreators';
+import {
+  addComment,
+  fetchCampsites,
+  fetchComments,
+  fetchPromotions,
+} from '../redux/ActionCreators';
 import { actions } from 'react-redux-form';
 
 const mapStateToProps = (state) => {
+  console.log('STATE AT MapSTATEtoPROPS: ', state);
   return {
     campsites: state.campsites,
     comments: state.comments,
@@ -26,11 +32,17 @@ const mapDispatchToProps = {
   addComment: (campsiteId, rating, author, text) =>
     addComment(campsiteId, rating, author, text),
   fetchCampsites: () => fetchCampsites(), //Q: How come no parameters?
-  resetFeedbackForm: () => actions.reset('feedbackForm'), // the modelname that was used was 'feedbackForm' in configureStore so using that here
+  resetFeedbackForm: () => actions.reset('feedbackForm'),
+  fetchComments: () => fetchComments(),
+  fetchPromotions: () => fetchPromotions(), // the modelname that was used was 'feedbackForm' in configureStore so using that here
 };
 
 class Main extends Component {
-  componentDidMount = () => this.props.fetchCampsites();
+  componentDidMount = () => {
+    this.props.fetchCampsites();
+    this.props.fetchComments();
+    this.props.fetchPromotions();
+  };
   //Since campsites array now hold 'isLoding', and 'errorMessage' objects as additional elements(see the reducer), to access the campsites array of campsite objects
   //on the inside of the outermost campsites array, it is necessary to go 'campsites.campsites' here.
   render() {
@@ -45,8 +57,12 @@ class Main extends Component {
           campsitesLoading={this.props.campsites.isLoading}
           campsitesErrorMessage={this.props.campsites.errorMessage}
           promotion={
-            this.props.promotions.filter((promotion) => promotion.featured)[0]
+            this.props.promotions.promotions.filter(
+              (promotion) => promotion.featured
+            )[0]
           }
+          promotionLoading={this.props.promotions.isLoading}
+          promotionErrorMessage={this.props.promotions.errorMessage}
           partner={this.props.partners.filter((partner) => partner.featured)[0]}
         />
       );
@@ -62,7 +78,7 @@ class Main extends Component {
           }
           isLoading={this.props.campsites.isLoading}
           errorMessage={this.props.campsites.errorMessage}
-          comments={this.props.comments.filter(
+          comments={this.props.comments.comments.filter(
             (comment) => comment.campsiteId === +match.params.campsiteId
           )}
           // campsiteId={match.params.campsiteId}
@@ -73,7 +89,7 @@ class Main extends Component {
 
     //Don't forget the '[0]' after I run filter. Filter always returns an array. If I forget this, I am passing the whole array and when child component needs a property of an element(which is the campsite object), it will be undefined.
     //Make sure to put the '+' in front of match. id from params is always a string(Think of a query string in url)
-
+    console.log('PROPS AT MAIN: ', this.props);
     return (
       <div>
         <Header />
@@ -85,8 +101,8 @@ class Main extends Component {
             render={(props) => (
               <Directory
                 {...props}
-                campsites={this.props.campsites}
-                comments={this.props.comments}
+                campsites={this.props.campsites.campsites}
+                comments={this.props.comments.comments}
               />
             )}
           />
