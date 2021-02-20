@@ -8,12 +8,17 @@ import {
 } from 'reactstrap';
 import { useHistory, Link } from 'react-router-dom';
 import { Loading } from './LoadingComponents';
+import { baseUrl } from '../shared/baseUrl';
 
 const RenderDirectoryItem = ({ campsite, comments }) => {
   const history = useHistory();
   return (
     <Card onClick={() => history.push(`/directory/${campsite.id}`)}>
-      <CardImg width="100%" src={campsite.image} alt={campsite.name} />
+      <CardImg
+        width="100%"
+        src={`${baseUrl}${campsite.image}`}
+        alt={campsite.name}
+      />
       <CardImgOverlay>
         <CardTitle>{campsite.name}</CardTitle>
       </CardImgOverlay>
@@ -22,7 +27,8 @@ const RenderDirectoryItem = ({ campsite, comments }) => {
 };
 //TODO: comments prop removal for now? Note different level before action creator is written.
 const Directory = ({ campsites, comments }) => {
-  const directory = campsites.campsites.map((campsite) => (
+  console.log('CAMPSITES: ', campsites);
+  const directory = campsites?.map((campsite) => (
     <div className="col-md-5 m-1" key={campsite.id}>
       <RenderDirectoryItem campsite={campsite} comments={comments} />
     </div>
