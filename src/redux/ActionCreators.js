@@ -6,10 +6,38 @@ import { baseUrl } from '../shared/baseUrl';
 //Q: What happens if no return again?
 //CAMPSITES
 //Q: Why is this never invoked?
+// https://developer.mozilla.org/en-US/docs/Web/API/Response
+//Response.ok Read only: A boolean indicating whether the response was successful (status in the range 200–299) or not.
+//Response.status Read only: The status code of the response. (This will be 200 for a success).
+// Response.statusText Read only: The status message corresponding to the status code. (e.g., OK for 200).
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+//create new error object off of Error constructor
+//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error/message
 export const fetchCampsites = () => (dispatch) => {
   console.log('INSIDE fetchCampsites!!');
   dispatch(campsitesLoading());
   return fetch(`${baseUrl}campsites`)
+    .then(
+      (response) => {
+        if (response.ok) {
+          console.log('RESPONSE: ', response);
+          return response;
+        } else {
+          const error = new Error(
+            `${response.status} when fetching campsites: ${response.statusText}`
+          );
+          console.log(error);
+          throw error;
+        }
+      },
+      //Below is for if there was no response at all, good or bad. This is a second callback method. First callback is for resolve and option second callback is for reject(hence in this case error). Note the comma.
+      //Error.prototype.message: This property contains a brief description of the error if one is available or has been set. By default, the message property is an empty string, but this behavior can be overridden for an instance by specifying a message as the first argument to the Error constructor.
+
+      (error) => {
+        const errorMessage = new Error(error.message);
+        throw errorMessage;
+      }
+    )
     .then((res) => res.json())
     .then((campsites) => {
       console.log(
@@ -18,7 +46,9 @@ export const fetchCampsites = () => (dispatch) => {
       );
       dispatch(addCampsites(campsites));
     })
-    .catch((err) => console.log(err));
+    .catch((errorMessage) => dispatch(campsiteFailed(errorMessage)));
+  //This catch method will grab any errors thrown above(first error, second error whatever I named them above, or any other error not provided for above?)
+  //Do NOT forget to wrap it in dispatch so it can be dispatched to the store!
 };
 //Q: where is this 'dispatch' coming from? A: It is used to 'dispatch' data into Redux store
 export const campsitesLoading = () => ({
@@ -39,8 +69,25 @@ export const addCampsites = (campsites) => ({
 //COMMENTS
 export const fetchComments = () => (dispatch) => {
   return fetch(`${baseUrl}comments`)
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          const error = new Error(
+            `${response.status} when fetching comments: ${response.statusText} `
+          );
+          throw error;
+        }
+      },
+      (error) => {
+        const errorMessage = new Error(error.message);
+        throw errorMessage;
+      }
+    )
     .then((res) => res.json())
-    .then((comments) => dispatch(addComments(comments)));
+    .then((comments) => dispatch(addComments(comments)))
+    .catch((errorMessage) => dispatch(commentsFailed(errorMessage)));
 };
 
 //Q: is the campsites at 44 the outer campsites that contain isLoading and errorMessage? Or it it inner(campsites.campsites). Looks like inner. Look at campsites reducer.
@@ -65,8 +112,24 @@ export const addComment = (campsiteId, rating, author, text) => ({
 export const fetchPromotions = () => (dispatch) => {
   dispatch(promotionsLoading());
   return fetch(`${baseUrl}promotions`)
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          const error = new Error(
+            `${error.status} when fetching promotions: ${error.statusText}`
+          );
+          throw error;
+        }
+      },
+      (error) => {
+        throw new Error(error.message);
+      }
+    )
     .then((res) => res.json())
-    .then((promotions) => dispatch(addPromotions(promotions)));
+    .then((promotions) => dispatch(addPromotions(promotions)))
+    .catch((errorMessage) => dispatch(promotionsFailed(errorMessage)));
 };
 
 export const promotionsLoading = () => ({

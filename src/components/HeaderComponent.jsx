@@ -27,18 +27,17 @@ class Header extends Component {
     };
   }
 
-  toggleModal = () =>
-    this.setState((curState) => ({ isModalOpen: !curState.isModalOpen }));
+  toggleModal = () => this.setState({ isModalOpen: !this.state.isModalOpen });
 
   toggleNav = () =>
     this.setState((curState) => ({ isNavOpen: !curState.isNavOpen }));
 
   handleLogin = (evt) => {
+    this.toggleModal();
     alert(
       `Username: ${this.username.value} Remember: ${this.remember.checked}`
     );
     // evt.preventDefault();
-    // this.toggleModal();
   };
   //Q: Why when I don't use evt.preventDefault(), modal closese when alert is closed? If I use it, it doesn't until I manually close the it.
   render() {

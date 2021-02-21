@@ -25,7 +25,6 @@ class CommentForm extends React.Component {
     super(props);
     this.state = {
       isModalOpen: false,
-      author: '', //TODO: TO delete
     };
   }
 
@@ -33,7 +32,7 @@ class CommentForm extends React.Component {
     this.setState((prevState) => ({ isModalOpen: !prevState.isModalOpen }));
 
   handleSubmit = (values) => {
-    // this.toggleModal();
+    this.toggleModal();
     this.props.addComment(
       this.props.campsiteId,
       values.rating,
