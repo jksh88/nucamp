@@ -9,6 +9,29 @@ import {
 } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../shared/baseUrl';
+import { Loading } from './LoadingComponents';
+
+const PartnerList = ({ partners, isLoading, errorMessage }) => {
+  const partnerList = partners.partners.map((partner) => {
+    return (
+      <Media tag="li" key={partner.id}>
+        {RenderPartner(partner)}
+      </Media>
+    );
+  });
+
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (errorMessage) {
+    return (
+      <div className="col">
+        <h4>{errorMessage}</h4>
+      </div>
+    );
+  }
+  return <div className="col mt-4">{partnerList}</div>;
+};
 
 const RenderPartner = (partner) => {
   if (partner) {
@@ -31,14 +54,6 @@ const RenderPartner = (partner) => {
 };
 
 function About(props) {
-  const partners = props.partners.partners.map((partner) => {
-    return (
-      <Media tag="li" key={partner.id}>
-        {RenderPartner(partner)}
-      </Media>
-    );
-  });
-
   return (
     <div className="container">
       <div className="row">
@@ -108,9 +123,7 @@ function About(props) {
         <div className="col-12">
           <h3>Community Partners</h3>
         </div>
-        <div className="col mt-4">
-          <Media list>{partners}</Media>
-        </div>
+        <PartnerList partners={props.partners} />
       </div>
     </div>
   );
