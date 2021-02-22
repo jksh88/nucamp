@@ -33,7 +33,7 @@ class CommentForm extends React.Component {
 
   handleSubmit = (values) => {
     this.toggleModal();
-    this.props.addComment(
+    this.props.postComment(
       this.props.campsiteId,
       values.rating,
       values.author,
@@ -118,7 +118,7 @@ class CommentForm extends React.Component {
   }
 }
 
-const RenderComments = ({ comments, addComment, campsiteId }) => {
+const RenderComments = ({ comments, postComment, campsiteId }) => {
   console.log('CampsiteId*** at RenderComments', campsiteId);
 
   if (comments) {
@@ -136,7 +136,7 @@ const RenderComments = ({ comments, addComment, campsiteId }) => {
             }).format(Date.parse(comment.date))}`}
           </p>
         ))}
-        <CommentForm addComment={addComment} campsiteId={campsiteId} />
+        <CommentForm postComment={postComment} campsiteId={campsiteId} />
       </div>
     );
   }
@@ -157,7 +157,7 @@ const RenderCampsite = ({ campsite }) => (
 const CampsiteInfo = ({
   campsite,
   comments,
-  addComment,
+  postComment,
   isLoading,
   errorMessage,
 }) => {
@@ -200,7 +200,7 @@ const CampsiteInfo = ({
           <RenderCampsite campsite={campsite} />
           <RenderComments
             comments={comments}
-            addComment={addComment}
+            postComment={postComment}
             campsiteId={campsite.id}
           />
           {/* {RenderCampsite(campsite)}

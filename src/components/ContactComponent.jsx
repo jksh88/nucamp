@@ -41,7 +41,6 @@ class Contact extends React.Component {
   }
 
   handleSubmit = (values) => {
-    alert(values);
     console.log('hi');
     console.log('Current state is: ' + JSON.stringify(values));
     alert('Current state is: ' + JSON.stringify(values));

@@ -48,7 +48,7 @@ export const fetchCampsites = () => (dispatch) => {
     })
     .catch((errorMessage) => dispatch(campsiteFailed(errorMessage)));
   //This catch method will grab any errors thrown above(first error, second error whatever I named them above, or any other error not provided for above?)
-  //Do NOT forget to wrap it in dispatch so it can be dispatched to the store!
+  //Do NOT forget to wrap it in dispatch so it can be dispatched to the storeg!
 };
 //Q: where is this 'dispatch' coming from? A: It is used to 'dispatch' data into Redux store
 export const campsitesLoading = () => ({
@@ -103,10 +103,49 @@ export const addComments = (comments) => ({
 });
 //Remember, addComments is not to add individual comment from feedback into store. Singluar addComment together with the 'model=....' attribute in React-Redux-Form. There's no action creator or receiver for that.
 //addCommentS here is adding comments to store, like addCampsites is for adding campsites to store.
-export const addComment = (campsiteId, rating, author, text) => ({
+export const addComment = (comment) => ({
   type: ActionTypes.ADD_COMMENT,
-  payload: { campsiteId, rating, author, text },
+  payload: comment,
 });
+
+//JSON Server automatically create HTTP endpoints based on db.json file provided. Per the db.json file structue here, the following endpoints have been created.
+//GET /comments, GET /comments/{id} PUT /comments, POST /comments, PUT /comments/{id}, PATCH /comments PATCH /comments/{id} DELETE /comments/{id}
+//https://www.npmjs.com/package/json-server
+export const postComment = (campsiteId, rating, author, text) => (dispatch) => {
+  const newComment = { campsiteId, rating, author, text };
+  newComment.date = new Date().toISOString();
+  return fetch(`${baseUrl}comments`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newComment),
+  })
+    .then(
+      (response) => {
+        if (response.ok) {
+          console.log(
+            'RESPONSE from JSON SERVER for postComment request: ',
+            response
+          );
+          return response;
+        } else {
+          throw new Error(
+            `${response.status} from JSON-SERVER for postComment request ${response.statusText}`
+          );
+        }
+      },
+      (error) => {
+        throw error;
+      }
+    )
+    .then((res) => res.json())
+    .then((comment) => dispatch(addComment(comment)))
+    .catch((error) => {
+      console.log(error.message);
+      alert(`Your comment could not be posted. Error: ${error.message}`);
+    });
+};
 
 //PROMOTIONS
 export const fetchPromotions = () => (dispatch) => {
