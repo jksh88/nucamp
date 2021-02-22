@@ -12,6 +12,7 @@ import {
   postComment,
   fetchCampsites,
   fetchComments,
+  fetchPartners,
   fetchPromotions,
 } from '../redux/ActionCreators';
 import { actions } from 'react-redux-form';
@@ -30,21 +31,23 @@ const mapStateToProps = (state) => {
 //TODO: To double-check: mapDispatchToProps is an object literarl and mapStateToProps is a function
 //dispatch => {} ?
 const mapDispatchToProps = {
+  fetchCampsites: () => fetchCampsites(),
+  fetchComments: () => fetchComments(),
   postComment: (campsiteId, rating, author, text) =>
     postComment(campsiteId, rating, author, text),
-  fetchCampsites: () => fetchCampsites(),
-  resetFeedbackForm: () => actions.reset('feedbackForm'),
-  fetchComments: () => fetchComments(),
+  fetchPartners: () => fetchPartners(),
   fetchPromotions: () => fetchPromotions(), // the modelname that was used was 'feedbackForm' in configureStore so using that here
+  resetFeedbackForm: () => actions.reset('feedbackForm'),
 };
 
 class Main extends Component {
   componentDidMount() {
     this.props.fetchCampsites();
     this.props.fetchComments();
+    this.props.fetchPartners();
     this.props.fetchPromotions();
   }
-  //Since campsites array now hold 'isLoding', and 'errorMessage' objects as additional elements(see the reducer), to access the campsites array of campsite objects
+  //Since campsites array now hold 'isLoading', and 'errorMessage' objects as additional elements(see the reducer), to access the campsites array of campsite objects
   //on the inside of the outermost campsites array, it is necessary to go 'campsites.campsites' here.
   //Below, first campsites is an object and second campsites is the array inside
   render() {
@@ -59,14 +62,20 @@ class Main extends Component {
           }
           campsitesLoading={this.props.campsites.isLoading}
           campsitesErrorMessage={this.props.campsites.errorMessage}
+          partner={
+            this.props.partners.partners.filter(
+              (partner) => partner.featured
+            )[0]
+          }
+          partnersLoading={this.props.partners.isLoading}
+          partnersErrorMessage={this.props.partners.errorMessage}
           promotion={
             this.props.promotions.promotions.filter(
               (promotion) => promotion.featured
             )[0]
           }
-          promotionLoading={this.props.promotions.isLoading}
-          promotionErrorMessage={this.props.promotions.errorMessage}
-          partner={this.props.partners.filter((partner) => partner.featured)[0]}
+          promotionsLoading={this.props.promotions.isLoading}
+          promotionsErrorMessage={this.props.promotions.errorMessage}
         />
       );
     };

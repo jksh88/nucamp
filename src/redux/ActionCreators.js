@@ -147,6 +147,45 @@ export const postComment = (campsiteId, rating, author, text) => (dispatch) => {
     });
 };
 
+//PARTNERS
+export const fetchPartners = () => (dispatch) => {
+  return fetch(`${baseUrl}partners`)
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          const error = new Error(
+            `${response.status} from JSON-SERVER when fetching partners ${response.statusText}`
+          );
+          throw error;
+        }
+      },
+      (error) => {
+        const errorMessage = new Error(error.message);
+        throw errorMessage;
+      }
+    )
+    .then((res) => res.json())
+    .then((partners) => dispatch(addPartners(partners)))
+    .catch((errorMessage) => dispatch(partnersFailed(errorMessage)));
+};
+// https://daveceddia.com/unexpected-token-in-json-at-position-0/
+
+export const addPartners = (partners) => ({
+  type: ActionTypes.ADD_PARTNERS,
+  payload: partners,
+});
+
+export const partnersLoading = () => ({
+  type: ActionTypes.PARTNERS_LOADING,
+});
+
+export const partnersFailed = (errorMessage) => ({
+  type: ActionTypes.PARTNERS_FAILED,
+  payload: errorMessage,
+});
+
 //PROMOTIONS
 export const fetchPromotions = () => (dispatch) => {
   dispatch(promotionsLoading());

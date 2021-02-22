@@ -29,10 +29,10 @@ const Home = ({
   partner,
   campsitesLoading,
   campsitesErrorMessage,
-  promotionLoading,
-  promotionErrorMessage,
-  partnerLoading,
-  partnerErrorMessage,
+  partnersLoading,
+  partnersErrorMessage,
+  promotionsLoading,
+  promotionsErrorMessage,
 }) => (
   <div className="container">
     <div className="row">
@@ -46,15 +46,15 @@ const Home = ({
       <div className="col-md m-1">
         <RenderCard
           item={promotion}
-          isLoading={promotionLoading}
-          errorMessage={promotionErrorMessage}
+          isLoading={promotionsLoading}
+          errorMessage={promotionsErrorMessage}
         />
       </div>
       <div className="col-md m-1">
         <RenderCard
           item={partner}
-          isLoading={promotionLoading}
-          errorMessage={promotionErrorMessage}
+          isLoading={partnersLoading}
+          errorMessage={partnersErrorMessage}
         />
       </div>
     </div>
