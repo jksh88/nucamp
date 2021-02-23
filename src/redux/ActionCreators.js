@@ -223,3 +223,34 @@ export const addPromotions = (promotions) => ({
   type: ActionTypes.ADD_PROMOTIONS,
   payload: promotions,
 });
+
+//Although feedback is not put into the store, this still needs to be thunked. Q: Why? because asynchronous?
+export const postFeedback = (feedback) => () => {
+  return fetch(`${baseUrl}feedback`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(feedback),
+  })
+    .then(
+      (response) => {
+        if (response.ok) {
+          return response;
+        } else {
+          const error = new Error(
+            `${response.status} for posting feedback ${response.statusText}`
+          );
+          throw error;
+        }
+      },
+      (error) => {
+        throw error;
+      }
+    )
+    .then((response) => response.json())
+    .then((data) =>
+      alert(`Thank you for your feedback ${feedback} ${JSON.stringify(data)}`)
+    )
+    .catch((error) =>
+      console.log('ERROR when posting feedback: ', error.message)
+    );
+};

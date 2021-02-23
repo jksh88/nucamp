@@ -14,6 +14,7 @@ import {
   fetchComments,
   fetchPartners,
   fetchPromotions,
+  postFeedback,
 } from '../redux/ActionCreators';
 import { actions } from 'react-redux-form';
 
@@ -37,6 +38,7 @@ const mapDispatchToProps = {
     postComment(campsiteId, rating, author, text),
   fetchPartners: () => fetchPartners(),
   fetchPromotions: () => fetchPromotions(), // the modelname that was used was 'feedbackForm' in configureStore so using that here
+  postFeedback: (feedback) => postFeedback(feedback),
   resetFeedbackForm: () => actions.reset('feedbackForm'),
 };
 
@@ -134,7 +136,10 @@ class Main extends Component {
             exact
             path="/contactus"
             render={() => (
-              <Contact resetFeedbackForm={this.props.resetFeedbackForm} />
+              <Contact
+                postFeedback={this.props.postFeedback}
+                resetFeedbackForm={this.props.resetFeedbackForm}
+              />
             )}
           />
           <Redirect to="/home" />

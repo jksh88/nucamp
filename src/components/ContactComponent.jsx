@@ -41,9 +41,7 @@ class Contact extends React.Component {
   }
 
   handleSubmit = (values) => {
-    console.log('hi');
-    console.log('Current state is: ' + JSON.stringify(values));
-    alert('Current state is: ' + JSON.stringify(values));
+    this.props.postFeedback(values);
     this.props.resetFeedbackForm();
   };
   //Q: How are the values in the form saved into the store if handleSubmit doesn't handle that and there is no reducer for handling feedback?
